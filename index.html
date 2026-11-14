@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Microherramienta local para comparar tres alternativas de un puesto de trabajo.">
+  <title>Comparador de alternativas de trabajo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="eyebrow">Estudio y diseño del trabajo · Parte 2</p>
+      <h1>Comparador de alternativas</h1>
+      <p>Calcula capacidad teórica por turno y contrástala con la demanda. Sustituye los campos vacíos por datos autorizados de tu caso.</p>
+    </header>
+
+    <section class="notice warning" role="status">
+      <strong>Plantilla pendiente de datos del caso.</strong>
+      El PDF recibido contiene la guía general, pero no la ficha del caso 5 ni sus observaciones. No se han inventado tiempos, demanda ni restricciones ergonómicas.
+    </section>
+
+    <section class="panel">
+      <h2>Entradas del escenario</h2>
+      <div class="form-grid">
+        <label>Demanda requerida (unidades buenas/turno)
+          <input id="demand" type="number" min="0.000001" step="any" placeholder="Dato del caso">
+        </label>
+        <label>Tiempo disponible (minutos/turno)
+          <input id="available" type="number" min="0.000001" step="any" placeholder="Dato del caso">
+        </label>
+      </div>
+      <h3>Tiempo estándar efectivo por unidad</h3>
+      <p class="muted">Usa la misma unidad y base de cálculo en las tres alternativas. No mezcles tiempo por lote, preparación, traslado ni pausas.</p>
+      <div class="form-grid three">
+        <label>Situación actual (min/unidad)
+          <input id="current" type="number" min="0.000001" step="any" placeholder="Pendiente">
+        </label>
+        <label>Rediseño 1 (min/unidad)
+          <input id="redesign1" type="number" min="0.000001" step="any" placeholder="Pendiente">
+        </label>
+        <label>Rediseño 2 (min/unidad)
+          <input id="redesign2" type="number" min="0.000001" step="any" placeholder="Pendiente">
+        </label>
+      </div>
+      <div class="actions">
+        <button id="calculate" type="button">Calcular comparación</button>
+        <button id="reset" class="secondary" type="button">Volver al escenario vacío</button>
+        <button id="csv" class="secondary" type="button" disabled>Descargar resultados CSV</button>
+      </div>
+      <p id="error" class="error" role="alert" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Resultados</h2>
+      <p id="status" class="muted">Introduce los cinco datos para habilitar el cálculo.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Alternativa</th><th>Capacidad teórica (unid./turno)</th><th>Demanda</th><th>Margen</th><th>Estado</th></tr></thead>
+          <tbody id="results"><tr><td colspan="5">Sin calcular</td></tr></tbody>
+        </table>
+      </div>
+      <p id="bottleneck" class="result-note"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Modelo, supuestos y límites</h2>
+      <p><strong>Capacidad teórica</strong> = tiempo disponible del turno ÷ tiempo estándar efectivo por unidad.</p>
+      <p><strong>Margen</strong> = capacidad teórica − demanda. La capacidad se muestra con decimales; no se redondea para decidir factibilidad.</p>
+      <ul>
+        <li>El tiempo estándar debe incorporar los suplementos conforme a la convención enseñada y declarada por el equipo.</li>
+        <li>El tiempo disponible no debe descontar pausas que ya estén incorporadas en el estándar o en disponibilidad.</li>
+        <li>El cálculo supone un flujo equivalente y no modela por sí solo mezcla, lotes, retrabajo, defectos, recursos compartidos ni variabilidad.</li>
+        <li>Un resultado que cubre demanda es solo factibilidad de capacidad en este modelo, no prueba de viabilidad ergonómica, antropométrica, de calidad ni normativa.</li>
+        <li>La decisión final requiere validar restricciones humanas y de calidad con los datos y modelos de clase. No diagnostica lesiones ni certifica cumplimiento legal.</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>Validación manual antes de usar el caso</h2>
+      <p>Pruebas de referencia de la fórmula (datos de prueba didácticos, no datos del caso):</p>
+      <ul>
+        <li>60 min ÷ 2 min/unidad = 30 unidades/turno.</li>
+        <li>60 min ÷ 3 min/unidad = 20 unidades/turno.</li>
+        <li>60 min ÷ 1.5 min/unidad = 40 unidades/turno.</li>
+        <li>Frontera: capacidad = demanda debe aparecer como “Cubre demanda” con margen cero.</li>
+        <li>Entrada inválida: cero, negativa o vacía debe impedir el cálculo.</li>
+        <li>No factible: capacidad menor que demanda debe marcar “No cubre demanda”.</li>
+      </ul>
+      <p class="muted">Antes de entregar, el equipo debe reemplazar o ampliar estas pruebas con tres cálculos manuales del caso y una comprobación característica de su proceso.</p>
+    </section>
+
+    <footer>Herramienta didáctica local · Datos del caso aún no incorporados</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
