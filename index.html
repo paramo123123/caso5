@@ -1,97 +1,57 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Microherramienta local para comparar tres alternativas de un puesto de trabajo.">
-  <title>Comparador de alternativas de trabajo</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Herramienta de decisión del Caso 5 Puntada y la máquina compartida">
+<title>Caso 5 · Puntada — simulador de producción</title><link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <main class="container">
-    <header>
-      <p class="eyebrow">Estudio y diseño del trabajo · Parte 2</p>
-      <h1>Comparador de alternativas</h1>
-      <p>Calcula capacidad teórica por turno y contrástala con la demanda. Sustituye los campos vacíos por datos autorizados de tu caso.</p>
-    </header>
-
-    <section class="notice warning" role="status">
-      <strong>Plantilla pendiente de datos del caso.</strong>
-      El PDF recibido contiene la guía general, pero no la ficha del caso 5 ni sus observaciones. No se han inventado tiempos, demanda ni restricciones ergonómicas.
-    </section>
-
-    <section class="panel">
-      <h2>Entradas del escenario</h2>
-      <div class="form-grid">
-        <label>Demanda requerida (unidades buenas/turno)
-          <input id="demand" type="number" min="0.000001" step="any" placeholder="Dato del caso">
-        </label>
-        <label>Tiempo disponible (minutos/turno)
-          <input id="available" type="number" min="0.000001" step="any" placeholder="Dato del caso">
-        </label>
-      </div>
-      <h3>Tiempo estándar efectivo por unidad</h3>
-      <p class="muted">Usa la misma unidad y base de cálculo en las tres alternativas. No mezcles tiempo por lote, preparación, traslado ni pausas.</p>
-      <div class="form-grid three">
-        <label>Situación actual (min/unidad)
-          <input id="current" type="number" min="0.000001" step="any" placeholder="Pendiente">
-        </label>
-        <label>Rediseño 1 (min/unidad)
-          <input id="redesign1" type="number" min="0.000001" step="any" placeholder="Pendiente">
-        </label>
-        <label>Rediseño 2 (min/unidad)
-          <input id="redesign2" type="number" min="0.000001" step="any" placeholder="Pendiente">
-        </label>
-      </div>
-      <div class="actions">
-        <button id="calculate" type="button">Calcular comparación</button>
-        <button id="reset" class="secondary" type="button">Volver al escenario vacío</button>
-        <button id="csv" class="secondary" type="button" disabled>Descargar resultados CSV</button>
-      </div>
-      <p id="error" class="error" role="alert" aria-live="polite"></p>
-    </section>
-
-    <section class="panel">
-      <h2>Resultados</h2>
-      <p id="status" class="muted">Introduce los cinco datos para habilitar el cálculo.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Alternativa</th><th>Capacidad teórica (unid./turno)</th><th>Demanda</th><th>Margen</th><th>Estado</th></tr></thead>
-          <tbody id="results"><tr><td colspan="5">Sin calcular</td></tr></tbody>
-        </table>
-      </div>
-      <p id="bottleneck" class="result-note"></p>
-    </section>
-
-    <section class="panel">
-      <h2>Modelo, supuestos y límites</h2>
-      <p><strong>Capacidad teórica</strong> = tiempo disponible del turno ÷ tiempo estándar efectivo por unidad.</p>
-      <p><strong>Margen</strong> = capacidad teórica − demanda. La capacidad se muestra con decimales; no se redondea para decidir factibilidad.</p>
-      <ul>
-        <li>El tiempo estándar debe incorporar los suplementos conforme a la convención enseñada y declarada por el equipo.</li>
-        <li>El tiempo disponible no debe descontar pausas que ya estén incorporadas en el estándar o en disponibilidad.</li>
-        <li>El cálculo supone un flujo equivalente y no modela por sí solo mezcla, lotes, retrabajo, defectos, recursos compartidos ni variabilidad.</li>
-        <li>Un resultado que cubre demanda es solo factibilidad de capacidad en este modelo, no prueba de viabilidad ergonómica, antropométrica, de calidad ni normativa.</li>
-        <li>La decisión final requiere validar restricciones humanas y de calidad con los datos y modelos de clase. No diagnostica lesiones ni certifica cumplimiento legal.</li>
-      </ul>
-    </section>
-
-    <section class="panel">
-      <h2>Validación manual antes de usar el caso</h2>
-      <p>Pruebas de referencia de la fórmula (datos de prueba didácticos, no datos del caso):</p>
-      <ul>
-        <li>60 min ÷ 2 min/unidad = 30 unidades/turno.</li>
-        <li>60 min ÷ 3 min/unidad = 20 unidades/turno.</li>
-        <li>60 min ÷ 1.5 min/unidad = 40 unidades/turno.</li>
-        <li>Frontera: capacidad = demanda debe aparecer como “Cubre demanda” con margen cero.</li>
-        <li>Entrada inválida: cero, negativa o vacía debe impedir el cálculo.</li>
-        <li>No factible: capacidad menor que demanda debe marcar “No cubre demanda”.</li>
-      </ul>
-      <p class="muted">Antes de entregar, el equipo debe reemplazar o ampliar estas pruebas con tres cálculos manuales del caso y una comprobación característica de su proceso.</p>
-    </section>
-
-    <footer>Herramienta didáctica local · Datos del caso aún no incorporados</footer>
-  </main>
-  <script src="app.js"></script>
-</body>
-</html>
+<body><main class="container">
+<header><p class="eyebrow">Estudio y diseño del trabajo · Parte 2</p><h1>Puntada: máquina compartida</h1>
+<p>Simula el flujo preparación → costura → acabado. Los pedidos pasan individualmente por cada etapa y la máquina solo puede atender un pedido a la vez.</p></header>
+<section class="notice"><strong>Modelo del caso.</strong> Tiempos estándar A: P 3 min, S 4 min, F 2 min. B cambia P a 1.5 min. C cambia S a 3 min e incorpora 9 min de calibración inicial. El suplemento del 20 % ya está incluido en A y en las etapas sin cambio.</section>
+<section class="panel"><h2>1. Configura el escenario</h2>
+<div class="form-grid three">
+<label>Alternativa<select id="alternative"><option value="A">A · Actual</option><option value="B">B · Plantilla de preparación</option><option value="C">C · Guía de costura</option></select></label>
+<label>Pedidos requeridos<input id="orders" type="number" min="0" step="1" value="16"></label>
+<label>Ventana neta (minutos)<input id="horizon" type="number" min="0.01" step="any" value="60"></label>
+</div>
+<h3>Asignación fija de puestos</h3><p class="muted">Cada persona ocupa una sola etapa durante la sesión. Selecciona una persona distinta para P, S y F.</p>
+<div class="form-grid three">
+<label>Preparación (P)<select id="assignP"><option>Elena</option><option>Hugo</option><option>Inés</option></select></label>
+<label>Costura (S)<select id="assignS"><option>Inés</option><option>Elena</option><option>Hugo</option></select></label>
+<label>Acabado (F)<select id="assignF"><option>Hugo</option><option>Inés</option><option>Elena</option></select></label>
+</div>
+<h3>Disponibilidad de personas</h3><div class="checks">
+<label><input type="checkbox" id="availableElena" checked> Elena disponible</label>
+<label><input type="checkbox" id="availableHugo" checked> Hugo disponible</label>
+<label><input type="checkbox" id="availableInes" checked> Inés disponible</label>
+</div>
+<div class="actions"><button id="simulate">Simular producción</button><button id="reset" class="secondary">Restablecer caso base</button><button id="csv" class="secondary" disabled>Descargar cronograma CSV</button></div>
+<p id="error" class="error" role="alert" aria-live="polite"></p>
+</section>
+<section class="panel"><h2>2. Resultado de capacidad y plazo</h2><p id="status" class="muted">Ejecuta la simulación para ver resultados.</p>
+<div id="metrics" class="metrics"></div><div class="table-wrap"><table><thead><tr><th>Etapa</th><th>Persona</th><th>TE (min/pedido)</th><th>Ocupación del recurso</th></tr></thead><tbody id="stageResults"><tr><td colspan="4">Sin simular</td></tr></tbody></table></div>
+<p id="decision" class="result-note"></p>
+</section>
+<section class="panel"><h2>3. Cronograma pedido por pedido</h2><div class="table-wrap"><table><thead><tr><th>Pedido</th><th>P inicia</th><th>P termina</th><th>S inicia</th><th>S termina</th><th>F inicia</th><th>F termina</th><th>¿Puntual?</th></tr></thead><tbody id="schedule"><tr><td colspan="8">Sin simular</td></tr></tbody></table></div><p class="muted">Los tiempos son minutos desde t = 0. La igualdad con la ventana cuenta como entrega puntual.</p></section>
+<section class="panel"><h2>4. Muestreo del trabajo (120 instantes por persona)</h2><p>Datos sintéticos de la muestra A del caso. Cada proporción se calcula sobre 120 instantes de esa persona; no se suman personas como si fueran una sola muestra.</p>
+<div class="table-wrap"><table><thead><tr><th>Persona / etapa</th><th>Trabajo</th><th>Espera material</th><th>Consulta información</th></tr></thead><tbody>
+<tr><td>Elena · P</td><td>56.67 % (68)</td><td>23.33 % (28)</td><td>20.00 % (24)</td></tr>
+<tr><td>Inés · S</td><td>78.33 % (94)</td><td>6.67 % (8)</td><td>15.00 % (18)</td></tr>
+<tr><td>Hugo · F</td><td>39.17 % (47)</td><td>40.83 % (49)</td><td>20.00 % (24)</td></tr>
+</tbody></table></div>
+<p><strong>Foco de investigación:</strong> Elena y especialmente Hugo muestran espera por material; observar si se debe a falta de entrada o bloqueo de salida. Inés tiene menor espera de material, pero conviene distinguir consulta de información. En un siguiente estudio registrar instante, estado, disponibilidad de material, cola de salida y motivo observable. No reducir estándares ni eliminar puestos a partir de estos porcentajes.</p>
+</section>
+<section class="panel"><h2>5. Revisión antropométrica y geométrica</h2><p>Plano de manipulación: entre 1 y 4 cm por debajo del codo sentado. Asiento de 45 cm. Valores del caso sintético; no representan percentiles poblacionales.</p>
+<div class="table-wrap"><table><thead><tr><th>Persona</th><th>Codo sobre asiento</th><th>Rango del plano sobre asiento</th><th>Altura de mesa desde piso</th><th>Alcance cómodo</th><th>Ajuste sugerido</th></tr></thead><tbody>
+<tr><td>Elena</td><td>24 cm</td><td>20–23 cm</td><td>65–68 cm</td><td>36 cm</td><td>66.5 cm</td></tr>
+<tr><td>Hugo</td><td>28 cm</td><td>24–27 cm</td><td>69–72 cm</td><td>42 cm</td><td>70.5 cm</td></tr>
+<tr><td>Inés</td><td>26 cm</td><td>22–25 cm</td><td>67–70 cm</td><td>39 cm</td><td>68.5 cm</td></tr>
+</tbody></table></div>
+<p>Mesa fija de 70 cm: queda 25 cm sobre el asiento; cumple el rango didáctico de Hugo e Inés, pero queda 2 cm por encima del límite superior de Elena. Mesa ajustable 64–72 cm permite los tres ajustes sugeridos. Ubicar las piezas frecuentes a no más de 36 cm para quedar dentro del alcance cómodo de las tres personas.</p>
+<h3>Momento estático simplificado</h3><p>Para 0.4 kg: a 0.35 m, M = 0.4 × 9.81 × 0.35 = <strong>1.3734 N·m</strong>. A 0.20 m, M = <strong>0.7848 N·m</strong>. Reducción: <strong>0.5886 N·m (42.86 %)</strong>. Es una simplificación física; no es evaluación clínica ni certificación normativa.</p>
+</section>
+<section class="panel"><h2>6. Bimanual y tiempos predeterminados</h2><ol><li>Alcanzar ambas piezas.</li><li>Sostener la pieza izquierda y orientar la derecha.</li><li>Sostener y alinear.</li><li>Soltar y retirar.</li></ol><p>La guía puede liberar la mano que sostiene, pero no se contabiliza ahorro adicional sin medirlo. Clasificar en tarjetas del equipo las acciones de alcanzar, tomar, posicionar y soltar; no convertir conteos en segundos certificados ni usar tablas comerciales.</p></section>
+<section class="panel"><h2>7. Economía y sensibilidad</h2><p>La alternativa C cuesta 450 u. m.; B cuesta 90 u. m.; A no requiere inversión. Cada accesorio adicional respecto de A aporta 7 u. m. en cada una de 30 sesiones. No se monetiza el tiempo libre de personal asalariado.</p><div id="economics" class="table-wrap"></div><p class="muted">El simulador calcula entregas para la ventana y pedidos solicitados. La comparación económica usa la diferencia de entregas contra A para el mismo número de pedidos y ventana.</p></section>
+<footer>Herramienta didáctica local · Caso ficticio con datos sintéticos · Revisar contra los cálculos manuales del equipo.</footer>
+</main><script src="app.js"></script></body></html>
